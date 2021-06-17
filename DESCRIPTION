@@ -1,0 +1,22 @@
+Package: speciomx
+Type: Package
+Title: Adaptive Dynamics Approximation of the Speciome Model
+Version: 1.0
+Author: Raphael Scherrer
+Maintainer: Raphael Scherrer <r.scherrer@rug.nl>
+Description: Contains functions to analyze the adaptive dynamics of the speciome model using a deterministic approximation.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.1
+Imports: 
+    magrittr,
+    dplyr,
+    purrr,
+    tibble,
+    tidyr,
+    ggplot2,
+    pracma
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
