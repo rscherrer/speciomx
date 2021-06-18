@@ -1,0 +1,83 @@
+---
+title: "speciomx: adaptive dynamics of a speciation model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(speciomx)
+library(magrittr)
+library(ggplot2)
+library(tidyr)
+
+theme_set(theme_classic())
+```
+
+This package has functions to perform the analysis of a deterministic approximation of the [`speciome`](https://github.com/rscherrer/speciome) model.
+
+First, let us set some parameter values. Parameters are passed to the different functions as a list of unevaluated expressions. It looks like this:
+
+```{r}
+get_default_pars()
+```
+But you can also set up your own list of expressions using the `alist` function.
+
+The expressions are evaluated within the functions. It is your responsibility to provide all the necessary parameters.
+
+Now that we have set up some parameter values we can perform a few analyses. The first obvious thing we can do is simulate trait evolution according to the model.
+
+```{r}
+pars <- get_default_pars()
+data <- simulate(0, 300, pars, init = rep(1000, 4))
+data
+```
+Here we simulated 100 generations of evolution starting with a trait value of 0. At each generation the selection gradient is computed (using `get_gradient`) to know in what direction selection is pushing us. Additional parametres `mu` and `sigma` modulate the strength of the response to selection. 
+
+For the selection gradient to be calculated at each generation we need to know the equilibrium population sizes in the two habitats. Those are solved numerically given the resident trait value and need starting points for the root finding algorithm, which are provided by `init` (here 1,000 individuals in each habitat is a reasonable guess). Note that `init` here takes four values because once the population has split into two morphs (when `x1` and `x2` start to diverge) there are four equilibrium population sizes to solve: one per habitat and per morph. Only the first two values in `init` are used before branching.
+
+The result can be plotted:
+
+```{r, fig.width=5}
+data %>%
+  pivot_longer(c(x1, x2), names_to = "morph", values_to = "x") %>%
+  ggplot(aes(x = time, y = x, group = morph)) +
+  geom_line() +
+  xlab("Time (generations)") +
+  ylab("Trait value")
+```
+
+Check out `?simulate` to find out more about the different options, including the possibility to simulate a burn-in period first, where only one resource and one habitat are available (just like in `speciome`).
+
+Here the population branches at zero because zero is a branching point. We can find branching points (and other types of evolutionary singularities) without having to simulate trait evolution, though. We can instead numerically solve the root of the selection gradient, because singular strategies are trait values for which the selection gradient is zero. For example, if we look for singular strategies between trait values -1 and +1:
+
+```{r}
+find_singularities(-1, 1, pars, init = rep(1000, 2))
+```
+This confirms that zero is a singular strategy. Note that here `init` takes two values because we are considering the model before branching.
+
+Assuming we have found a singularity, we can also tell whether it is a branching point or some other type of singularity by evaluating its convergence stability and its evolutionary stability. A branching point is convergent-stable but evolutionarily unstable:
+
+```{r}
+is_convergent(0, pars, init = rep(1000, 2))
+```
+```{r}
+is_stable(0, pars, init = rep(1000, 2))
+```
+
+To better visualize this we can generate a pairwise invasibility plot (PIP), which shows which mutant trait values can invade which residents:
+
+```{r, fig.width=4}
+plot_pip(seq(-1, 1, 0.05), pars, init = rep(1000, 2))
+```
+
+This reveals that indeed evolution will lead to trait value zero through successive invasion of mutants, but once zero is reached any mutant will be able to invade and branching will occur.
