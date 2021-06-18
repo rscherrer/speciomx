@@ -25,6 +25,8 @@ theme_set(theme_classic())
 
 This package has functions to perform the analysis of a deterministic approximation of the [`speciome`](https://github.com/rscherrer/speciome) model.
 
+## Parameter setting
+
 First, let us set some parameter values. Parameters are passed to the different functions as a list of unevaluated expressions. It looks like this:
 
 ```{r}
@@ -33,6 +35,8 @@ get_default_pars()
 But you can also set up your own list of expressions using the `alist` function.
 
 The expressions are evaluated within the functions. It is your responsibility to provide all the necessary parameters.
+
+## Simulate trait evolution
 
 Now that we have set up some parameter values we can perform a few analyses. The first obvious thing we can do is simulate trait evolution according to the model.
 
@@ -58,6 +62,8 @@ data %>%
 
 Check out `?simulate` to find out more about the different options, including the possibility to simulate a burn-in period first, where only one resource and one habitat are available (just like in `speciome`).
 
+## Finding and evaluating singularities
+
 Here the population branches at zero because zero is a branching point. We can find branching points (and other types of evolutionary singularities) without having to simulate trait evolution, though. We can instead numerically solve the root of the selection gradient, because singular strategies are trait values for which the selection gradient is zero. For example, if we look for singular strategies between trait values -1 and +1:
 
 ```{r}
@@ -73,6 +79,8 @@ is_convergent(0, pars, init = rep(1000, 2))
 ```{r}
 is_stable(0, pars, init = rep(1000, 2))
 ```
+
+## Pairwise invasibility plot
 
 To better visualize this we can generate a pairwise invasibility plot (PIP), which shows which mutant trait values can invade which residents:
 

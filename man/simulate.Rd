@@ -72,7 +72,7 @@ step (\code{mu = 0.01} would be reasonable for a trait encoded by 100 loci
 and with a 0.0001 mutation rate per locus). \code{sigma} is, strictly
 speaking, the standard deviation of the distribution of mutational effects.
 
-An equilibrium is reached when the selection gradient within \code{tol} units
+An equilibrium is reached when the selection gradient falls within \code{tol} units
 around zero. If this equilibrium is a branching point (assessed using
 \code{is_stable}) then the dimorphic phase starts and the two morphs are
 displaced by \code{dodge} units before undergoing separate evolutionary

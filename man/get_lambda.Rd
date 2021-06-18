@@ -16,6 +16,8 @@ get_lambda(x, xres, pars, init, fast = FALSE)
 
 \item{init}{A vector of two starting values for solving of the demographic
 equilibrium}
+
+\item{fast}{See the "Details" section}
 }
 \value{
 The invasion fitness of the mutant given the resident
