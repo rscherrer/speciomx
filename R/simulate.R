@@ -17,6 +17,8 @@
 #' @param dodge How much to displace each morph from the branching point once
 #' branching has occurred
 #' @param burnin The number of time steps in the burn-in period
+#' @param branch Integer indicating whether and how branching occurs (see
+#' \code{?simulate_mono}).
 #'
 #' @details
 #'
@@ -69,7 +71,7 @@
 # Function to simulate evolution
 simulate <- function(
   xstart, ntimes, pars, init, mu = 0.01, sigma = 0.1, tol = 0.0001,
-  dodge = 0.001, burnin = 0
+  dodge = 0.001, burnin = 0, branch = 1
 ) {
 
   # If the burn-in must be simulated...
@@ -95,7 +97,9 @@ simulate <- function(
   }
 
   # Monomorphic evolution until potential branching point
-  data <- simulate_mono(xstart, ntimes, pars, init[1:2], mu, sigma, tol = tol)
+  data <- simulate_mono(
+    xstart, ntimes, pars, init[1:2], mu, sigma, tol = tol, branch = branch
+  )
 
   # Reformat the dataset
   data <- data %>% dplyr::mutate(x2 = x) %>% dplyr::rename(x1 = "x")

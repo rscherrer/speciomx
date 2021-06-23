@@ -13,7 +13,8 @@ simulate(
   sigma = 0.1,
   tol = 1e-04,
   dodge = 0.001,
-  burnin = 0
+  burnin = 0,
+  branch = 1
 )
 }
 \arguments{
@@ -38,6 +39,9 @@ enough to zero and an equilibrium has been reached}
 branching has occurred}
 
 \item{burnin}{The number of time steps in the burn-in period}
+
+\item{branch}{Integer indicating whether and how branching occurs (see
+\code{?simulate_mono}).}
 }
 \value{
 A tibble containing the trait values in the two morphs at each time

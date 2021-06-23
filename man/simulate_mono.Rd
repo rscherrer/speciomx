@@ -11,7 +11,7 @@ simulate_mono(
   init,
   mu = 0.01,
   sigma = 0.1,
-  branch = TRUE,
+  branch = 1,
   tol = 1e-04
 )
 }
@@ -30,11 +30,14 @@ equilibrium}
 
 \item{sigma}{The (standard deviation of) mutational step size upon mutation}
 
-\item{branch}{Whether to end the simulation when a branching point has
-been reached}
+\item{branch}{Integer indicating whether branching may occur and how
+convergence to the equilibrium is assessed: 0, branching is not allowed;
+1, branching is allowed and equilibrium is reached when the selection
+gradient is close enough to zero; 2, branching happens when two mutants away
+by \code{sigma} units can mutually invade each other.}
 
 \item{tol}{The tolerance when assessing if the selection gradient is close
-enough to zero and an equilibrium has been reached}
+enough to zero and an equilibrium has been reached (if \code{branch = 1}).}
 }
 \value{
 A tibble containing the trait value of the population at each time
@@ -45,6 +48,25 @@ Simulates trait evolution in a monomorphic population.
 }
 \details{
 See \code{?simulate}.
+
+There are two ways to assess whether a branching point has been reached.
+One (\code{branch = 1}) is to evaluate the curvature of the fitness function
+when the selection gradient becomes zero (i.e. at a singularity, see
+\code{?is_stable}). Another way (\code{branch = 2}) is to evaluate the
+mutual invasibility of the current resident and a mutant that is some
+mutationally reasonable phenotypic distance away (e.g. one mutational
+standard deviation \code{sigma} away). If each of the two (when taken as
+a resident) can be invaded by the other (taken as a mutant, see
+\code{?get_lambda}) then a stable polymorphism can persist and we assume
+that branching occurs. In practice, the branching point may be reached
+quicker with \code{branch = 2} as it does not need to wait for the gradient
+to completely converge to zero (within the limits imposed by \code{tol},
+which can also be rather arbitrary).
+}
+\note{
+The argument \code{branch} will be reverted to 1 if the selection
+gradient reaches the value of exactly zero, even if \code{branch = 2} was
+set in the function call (this is to ensure symmetry of the branching event).
 }
 \examples{
 
@@ -53,5 +75,5 @@ simulate_mono(-1, 10, pars, init = rep(1000, 2))
 
 }
 \seealso{
-\code{find_equilibrium}, \code{get_gradient}
+\code{find_equilibrium}, \code{get_gradient}, \code{get_lambda}
 }
