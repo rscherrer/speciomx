@@ -1,7 +1,7 @@
 Package: speciomx
 Type: Package
 Title: Adaptive Dynamics Approximation of the Speciome Model
-Version: 1.0
+Version: 1.2
 Author: Raphael Scherrer
 Maintainer: Raphael Scherrer <r.scherrer@rug.nl>
 Description: Contains functions to analyze the adaptive dynamics of the speciome model using a deterministic approximation.
