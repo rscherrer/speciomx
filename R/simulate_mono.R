@@ -87,16 +87,8 @@ simulate_mono <- function(
       invades <- get_lambda(x, xmut, pars, init, fast = FALSE) > 1
 
       # If so...
-      if (is_invaded & invades) {
+      if (is_invaded & invades) break
 
-        # Assume the singularity is in the middle of the two
-        x <- 0.5 * (x + xmut)
-
-        # Replace the last recorded value with the singularity
-        xvalues[t] <- x
-        break
-
-      }
     }
 
     # Evolve

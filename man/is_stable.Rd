@@ -4,7 +4,7 @@
 \alias{is_stable}
 \title{Evaluate evolutionary stability}
 \usage{
-is_stable(xeq, pars, init)
+is_stable(xeq, pars, init, value = FALSE)
 }
 \arguments{
 \item{xeq}{Some equilibrium trait value}
@@ -14,6 +14,10 @@ is_stable(xeq, pars, init)
 
 \item{init}{A vector of two starting values for solving of the demographic
 equilibrium}
+
+\item{value}{Whether to return the actual value of the curvature of the
+fitness function (defaults to \code{FALSE}, i.e. only returns whether this
+value is positive or negative)}
 }
 \value{
 A boolean

@@ -8,6 +8,9 @@
 #' \code{get_default_pars})
 #' @param init A vector of two starting values for solving of the demographic
 #' equilibrium
+#' @param value Whether to return the actual value of the curvature of the
+#' fitness function (defaults to \code{FALSE}, i.e. only returns whether this
+#' value is positive or negative)
 #'
 #' @details This functions computes an expression for the second derivative
 #' of the invasion fitness function with respect to the mutant trait value,
@@ -27,7 +30,7 @@
 #' @export
 
 # Evolutionary stability criterion
-is_stable <- function(xeq, pars, init) {
+is_stable <- function(xeq, pars, init, value = FALSE) {
 
   # Evaluation is at equilibrium
   xres <- xeq
@@ -60,13 +63,15 @@ is_stable <- function(xeq, pars, init) {
   ddW2 <- R12 * ddw1 + R22 * ddw2
 
   # Compute the second derivative of the fitness function
-  denom <- 1 + m^2 * r1 * r2 + (m - 1) * (2 + (m - 1) * r2^2)
-  num <- m^2 * r1 * ddW2 + 2 * (2 * m - 1) * (1 + (m - 1) * r2) * dW1 * dW2 +
-    (1 + (m - 1) * r2) * (1 - m + (2 * m - 1) * r2) * ddW1 -
-    a * (
-      m^2 * r1 * W2 -
-        (m - 1 + (2 - 4 * m + m^2) * r2 - (1 - 3 * m + 2 * m^2) * r2^2) * W1
-    )
+  denom <- 1 + (m - 1) * r2 + m^2 * r1 * r2 + (m - 1)^2 * r2^2
+  num <- (m - 1 + (2 - 4 * m + m^2) * r2 - (1 - 3 * m + 2 * m^2) * r2^2) * W1
+  num <- num - m^2 * r1 * W2
+  num <- a * num
+  num <- num + (1 - m - (2 - 4 * m + m^2) * r2 + (1 - 3 * m + 2 * m^2) * r2^2) * ddW1
+  num <- num + 2 * (2 * m - 1) * (1 + (m - 1) * r2) * dW1 * dW2
+  num <- num + m^2 * r1 * ddW2
+
+  if (value) return(num / denom)
 
   # Is the equilibrium stable?
   num / denom < 0
