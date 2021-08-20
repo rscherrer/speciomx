@@ -1,4 +1,4 @@
-#' Evaluate evolutionary stability
+#' Evaluate within-habitat evolutionary stability
 #'
 #' Assesses whether an equilibrium trait value is evolutionarily stable, or
 #' invasion-proof.
@@ -6,8 +6,6 @@
 #' @param xeq Some equilibrium trait value
 #' @param pars An unevaluated parameter-list (e.g. as returned by
 #' \code{get_default_pars})
-#' @param init A vector of two starting values for solving of the demographic
-#' equilibrium
 #' @param value Whether to return the actual value of the curvature of the
 #' fitness function (defaults to \code{FALSE}, i.e. only returns whether this
 #' value is negative)
@@ -20,17 +18,17 @@
 #'
 #' @return A boolean
 #'
-#' @seealso \code{is_convergent}
+#' @seealso \code{is_convergent_within}, \code{is_stable}
 #'
 #' @examples
 #'
 #' pars <- get_default_pars()
-#' is_stable(0, pars, init = rep(1000, 2))
+#' is_stable_within(0, pars)
 #'
 #' @export
 
 # Evolutionary stability criterion
-is_stable <- function(xeq, pars, init, value = FALSE) {
+is_stable_within <- function(xeq, pars, value = FALSE) {
 
   # Evaluation is at equilibrium
   xres <- xeq
@@ -40,40 +38,28 @@ is_stable <- function(xeq, pars, init, value = FALSE) {
   for (i in seq(pars)) eval(pars[[i]])
 
   # Find the demographic equilibrium
-  N <- find_equilibrium(xeq, pars, init)
+  N <- find_equilibrium_within(xeq, pars)
 
   # Evaluate the model at equilibrium
-  model <- get_model()
+  model <- get_model_within()
   for (i in seq(model)) eval(model[[i]])
 
   # Derivatives of the attack rates
   dw1 <- -2 * s * w0 / psi * (x + psi) * w1
   dw2 <- -2 * s * w0 / psi * (x - psi) * w2
 
-  # Derivatives of the reproductive success
-  dW1 <- R11 * dw1 + R21 * dw2
-  dW2 <- R12 * dw1 + R22 * dw2
-
   # Second derivatives of the attack rates
   ddw1 <- -2 * s * w0 / psi * (w1 + (x + psi) * dw1)
   ddw2 <- -2 * s * w0 / psi * (w2 + (x - psi) * dw2)
 
-  # Second derivatives of the reproductive success
-  ddW1 <- R11 * ddw1 + R21 * ddw2
-  ddW2 <- R12 * ddw1 + R22 * ddw2
+  # Second derivative of the reproductive success
+  ddW <- R1 * ddw1 + R2 * ddw2
 
-  # Compute the second derivative of the fitness function
-  denom <- 1 + (m - 1) * r2 + m^2 * r1 * r2 + (m - 1)^2 * r2^2
-  num <- (m - 1 + (2 - 4 * m + m^2) * r2 - (1 - 3 * m + 2 * m^2) * r2^2) * W1
-  num <- num - m^2 * r1 * W2
-  num <- a * num
-  num <- num + (1 - m - (2 - 4 * m + m^2) * r2 + (1 - 3 * m + 2 * m^2) * r2^2) * ddW1
-  num <- num + 2 * (2 * m - 1) * (1 + (m - 1) * r2) * dW1 * dW2
-  num <- num + m^2 * r1 * ddW2
+  # Invasibility
+  inv <- ddW - a * W
 
-  if (value) return(num / denom)
+  if (value) return(inv)
 
-  # Is the equilibrium stable?
-  num / denom < 0
+  return(inv < 0)
 
 }

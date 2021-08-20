@@ -1,4 +1,4 @@
-#' Model set-up
+#' Within-habitat model set-up
 #'
 #' Generates an unevaluated list of model variable statements
 #'
@@ -9,16 +9,16 @@
 #' values are present in the environment (see e.g. \code{?get_default_pars}) and
 #' that variables \code{x} and \code{xres} exist.
 #'
-#' @seealso \code{get_model_di}, \code{get_model_within}
+#' @seealso \code{get_model}, \code{get_model_di}
 #'
 #' @examples
 #'
-#' get_model()
+#' get_model_within()
 #'
 #' @export
 
 # Set up the model, not evaluated
-get_model <- function() {
+get_model_within <- function() {
 
   # x: mutant trait value
   # xres: resident trait value
@@ -33,31 +33,18 @@ get_model <- function() {
     w1res <- w0 * exp(-s * (xres + psi)^2 / psi^2),
     w2res <- w0 * exp(-s * (xres - psi)^2 / psi^2),
 
-    # Equilibrium resource concentrations of each resource in each habitat
-    R11 <- iota / (omicron + N[1] * w1res),
-    R12 <- h * iota / (omicron + N[2] * w1res),
-    R21 <- h * iota / (omicron + N[1] * w2res),
-    R22 <- iota / (omicron + N[2] * w2res),
+    # Equilibrium resource concentrations of each resource
+    R1 <- iota / (omicron + N * w1res),
+    R2 <- h * iota / (omicron + N * w2res),
 
-    # Mutant reproductive success in each habitat
-    W1 <- w1 * R11 + w2  * R21,
-    W2 <- w1 * R12 + w2  * R22,
+    # Mutant reproductive success
+    W <- w1 * R1 + w2 * R2,
 
     # Attractiveness of the mutant to the resident
     A <- exp(-a * (x - xres)^2),
 
-    # Geometric growth rate of the mutant in each habitat
-    r1 <- 1 - d + 0.5 * W1 * (1 + A),
-    r2 <- 1 - d + 0.5 * W2 * (1 + A),
-
-    # Migration matrix
-    M <- matrix(c(1 - m, m, m, 1 - m), 2, 2, byrow = TRUE),
-
-    # Geometric growth matrix
-    Q <- matrix(c(r1, 0, 0, r2), 2, 2, byrow = TRUE),
-
-    # Transition matrix
-    Lambda <- M %*% Q
+    # Geometric growth rate of the mutant
+    r <- 1 - d + 0.5 * W * (1 + A)
 
   )
 

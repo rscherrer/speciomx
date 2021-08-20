@@ -9,7 +9,7 @@
 #' values are present in the environment (see e.g. \code{?get_default_pars}) and
 #' that variables \code{x1}, \code{x2}, \code{xres1} and \code{xres2} exist.
 #'
-#' @seealso \code{get_model}, \code{get_model_burnin}
+#' @seealso \code{get_model}, \code{get_model_within}
 #'
 #' @examples
 #'

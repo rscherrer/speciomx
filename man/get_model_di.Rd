@@ -24,5 +24,5 @@ get_model_di()
 
 }
 \seealso{
-\code{get_model}, \code{get_model_burnin}
+\code{get_model}, \code{get_model_within}
 }
