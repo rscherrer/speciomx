@@ -47,16 +47,16 @@ is_stable <- function(xeq, pars, init, value = FALSE) {
   for (i in seq(model)) eval(model[[i]])
 
   # Derivatives of the attack rates
-  dw1 <- -2 * s * w0 / psi * (x + psi) * w1
-  dw2 <- -2 * s * w0 / psi * (x - psi) * w2
+  dw1 <- -2 * s / psi^2 * (x + psi) * w1
+  dw2 <- -2 * s / psi^2 * (x - psi) * w2
 
   # Derivatives of the reproductive success
   dW1 <- R11 * dw1 + R21 * dw2
   dW2 <- R12 * dw1 + R22 * dw2
 
   # Second derivatives of the attack rates
-  ddw1 <- -2 * s * w0 / psi * (w1 + (x + psi) * dw1)
-  ddw2 <- -2 * s * w0 / psi * (w2 + (x - psi) * dw2)
+  ddw1 <- -2 * s / psi^2 * (w1 + (x + psi) * dw1)
+  ddw2 <- -2 * s / psi^2 * (w2 + (x - psi) * dw2)
 
   # Second derivatives of the reproductive success
   ddW1 <- R11 * ddw1 + R21 * ddw2
