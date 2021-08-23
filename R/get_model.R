@@ -40,8 +40,8 @@ get_model <- function() {
     R22 <- iota / (omicron + N[2] * w2res),
 
     # Mutant reproductive success in each habitat
-    W1 <- w1 * R11 + w2  * R21,
-    W2 <- w1 * R12 + w2  * R22,
+    W1 <- w1 * R11 + w2 * R21,
+    W2 <- w1 * R12 + w2 * R22,
 
     # Attractiveness of the mutant to the resident
     A <- exp(-a * (x - xres)^2),

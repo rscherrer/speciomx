@@ -48,9 +48,11 @@ get_lambda <- function(x, xres, pars, init, fast = FALSE) {
   for (i in seq(model)) eval(model[[i]])
 
   # Compute invasion fitness
-  0.5 * (
-    (1 - m) * (r1 + r2) +
-      sqrt((1 - m)^2 * (r1^2 - 2 * r1 * r2 + r2^2) + 4 * m^2 * r1 * r2)
-  )
+  lambda <- (1 - m)^2 * (r1 + r2)^2 - 4 * (1 - 2 * m) * r1 * r2
+  lambda <- sqrt(lambda)
+  lambda <- lambda + (1 - m) * (r1 + r2)
+  lambda <- 0.5 * lambda
+
+  return(lambda)
 
 }
