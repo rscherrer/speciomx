@@ -59,8 +59,8 @@ get_gradient_di <- function(xres1, xres2, pars, init) {
   G <- purrr::pmap_dbl(l, function(x, w1, w2, r1, r2) {
 
     # Derivatives of the attack rates
-    dw1 <- -2 * s * w0 / psi * (x + psi) * w1
-    dw2 <- -2 * s * w0 / psi * (x - psi) * w2
+    dw1 <- -2 * s * (x + psi) * w1 / psi^2
+    dw2 <- -2 * s * (x - psi) * w2 / psi^2
 
     # Derivatives of the reproductive success
     dW1 <- R11 * dw1 + R21 * dw2

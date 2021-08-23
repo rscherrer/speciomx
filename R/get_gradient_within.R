@@ -37,7 +37,7 @@ get_gradient_within <- function(xres, pars) {
   for (i in seq(model)) eval(model[[i]])
 
   # Return the selection gradient
-  gdt <- -2 * w0 * s * ((x + psi) * w1 * R1 + (x - psi) * w2 * R2)
+  gdt <- -2 * s * ((x + psi) * w1 * R1 + (x - psi) * w2 * R2) / psi^2
 
   return(gdt)
 

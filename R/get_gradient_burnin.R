@@ -41,7 +41,7 @@ get_gradient_burnin <- function(xres, pars) {
   R <- iota / (omicron + N * w)
 
   # Selection gradient
-  G <- -2 * s * w0 * (xres + psi) * w * R
+  G <- -2 * s * (xres + psi) * w * R / psi^2
 
   return(G)
 
