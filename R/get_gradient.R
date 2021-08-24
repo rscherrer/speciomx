@@ -40,8 +40,8 @@ get_gradient <- function(xres, pars, init) {
   for (i in seq(model)) eval(model[[i]])
 
   # Derivatives of the attack rates
-  dw1 <- -2 * s * w0 / psi * (x + psi) * w1
-  dw2 <- -2 * s * w0 / psi * (x - psi) * w2
+  dw1 <- -2 * s * (x + psi) * w1 / psi^2
+  dw2 <- -2 * s * (x - psi) * w2 / psi^2
 
   # Derivatives of the reproductive success
   dW1 <- R11 * dw1 + R21 * dw2

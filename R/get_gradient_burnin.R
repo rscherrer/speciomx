@@ -40,8 +40,11 @@ get_gradient_burnin <- function(xres, pars) {
   # Equilibrium resource concentration
   R <- iota / (omicron + N * w)
 
+  # Derivative of the attack rate
+  dw <- -2 * s * (xres + psi) * w / psi ^2
+
   # Selection gradient
-  G <- -2 * s * (xres + psi) * w * R / psi^2
+  G <- dw * R
 
   return(G)
 
